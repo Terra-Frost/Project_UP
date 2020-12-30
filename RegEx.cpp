@@ -2,6 +2,13 @@
 #include  <cstdlib>
 
 using  namespace  std;
+void normalize(string& reg)
+{
+    for(int i=0;i<reg.size();i++)
+    {
+        if(reg[i]=='\\')swap(reg[i],reg[i+1]);
+    }
+}
 bool isContaint(string str, string reGex)
 {
 
@@ -35,8 +42,9 @@ int main()
 
 {
 
- string str = ".";
- string reg = "\.";
+ string str = "cbba";
+ string reg = ".ba?";
+ //normalize(reg);
  cout<<isContaint(str,reg);
 
 return 0;
