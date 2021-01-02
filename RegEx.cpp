@@ -1,13 +1,29 @@
 #include  <iostream>
 #include  <cstdlib>
 
+const string errorSymbols = "^*+?.";
 using  namespace  std;
-void normalize(string& reg)
+int normalize(string& reg)
 {
-    for(int i=0;i<reg.size();i++)
+    int numberOfSpeshalChar=0
+    if(reg[reg.size()=='\\')return -1;
+    if(reg.find(reg[0],1,4))return -2;
+    for(int i=1;i<reg.size()-1;i++)
     {
-        if(reg[i]=='\\')swap(reg[i],reg[i+1]);
+        if(reg[i]=='^')return -3;
+
+        if(reg[i]=='\\'){
+                swap(reg[i],reg[i+1]);
+                i++;
+        }
+          if(reg.find(reg[i],1,4))
+        {
+
+            if(++numberOfSpeshalChar>2)return -4;
+            if(reg.find(reg[i+1],1,3))return -5;
+        }
     }
+    return 0;
 }
 bool isContaint(string str, string reGex,int indexStr)
 {
