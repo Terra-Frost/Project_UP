@@ -16,6 +16,9 @@ bool isContaint(string str, string reGex,int indexStr)
             if(indexStr<0 && indexRegex>0)return 0;
             switch(reGex[indexRegex])
             {
+                case '^':
+                    if(str[indexStr]==reGex[indexRegex])return 1;
+                    else return 0;
                 case '.':break;
                 case '?':
                     if(str[indexStr]==reGex[--indexRegex])indexStr--;
@@ -53,7 +56,7 @@ int main()
 
 {
 
- string str = "aaaaaaaaaaa";
+ string str = "bbbb";
  string reg = "a+";
  //normalize(reg);
  cout<<findRegex(str,reg);
