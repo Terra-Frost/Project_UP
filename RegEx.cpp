@@ -1,13 +1,13 @@
 #include  <iostream>
 #include  <cstdlib>
-
-const string errorSymbols = "^*+?.";
+#include  <fstream>
 using  namespace  std;
 int normalize(string& reg)
 {
-    int numberOfSpeshalChar=0
-    if(reg[reg.size()=='\\')return -1;
-    if(reg.find(reg[0],1,4))return -2;
+    const string errorSymbols = ".*+?";
+    int numberOfSpeshalChar=0;
+    if(reg[reg.size()]=='\\')return -1;
+    if(errorSymbols.find(reg[0],1)==-1)return -2;
     for(int i=1;i<reg.size()-1;i++)
     {
         if(reg[i]=='^')return -3;
@@ -16,11 +16,11 @@ int normalize(string& reg)
                 swap(reg[i],reg[i+1]);
                 i++;
         }
-          if(reg.find(reg[i],1,4))
+          if(errorSymbols.find(reg[i]))
         {
 
             if(++numberOfSpeshalChar>2)return -4;
-            if(reg.find(reg[i+1],1,3))return -5;
+            if(reg.find(reg[i+1],1))return -5;
         }
     }
     return 0;
@@ -35,18 +35,15 @@ bool isContaint(string str, string reGex,int indexStr)
                 case '^':
                     if(str[indexStr]==reGex[indexRegex])return 1;
                     else return 0;
-                case '.':break;
+
                 case '?':
                     if(str[indexStr]==reGex[--indexRegex])indexStr--;
                     indexRegex--;
-                    break;
-                case '*':
-                    while(str[indexStr]==reGex[--indexRegex] && indexStr>=0)indexStr--;
-                    indexRegex--;
-                    break;
+                case '.':    break;
                 case '+':
                     if(str[indexStr]==reGex[--indexRegex])indexStr--;
                      else return 0;
+                case '*':
                     while(str[indexStr]==reGex[--indexRegex] && indexStr>=0)indexStr--;
                     indexRegex--;
                     break;
@@ -54,6 +51,7 @@ bool isContaint(string str, string reGex,int indexStr)
                 default :
                     if(str[indexStr]==reGex[indexRegex])indexStr--;
                         else return 0;
+                        break;
             }
 
         }
@@ -68,14 +66,47 @@ bool findRegex(string str,string reg)
     }
     return 0;
 }
-int main()
-
+int fReadStr(string filename, string str, size_t line)
 {
 
- string str = "bbbb";
- string reg = "a+";
- //normalize(reg);
- cout<<findRegex(str,reg);
+    ifstream MyFile(filename);
+    if (!MyFile.is_open())return 1; // Unable to open file
+    size_t lineNumber = 1;
+    while ((lineNumber++ <= line) && (getline(MyFile,str)));
+    if (MyFile.eof() && (line + 2 != lineNumber))
+    return 2; // File is shorter than requested
+    MyFile.close();
+    return 0; // Success
+}
+int main()
+{
+    string regEx;
+    string fileName;
+    string str;
+    getline(cin,regEx);
+    getline(cin,fileName);
+    int errorCode = normalize(regEx);
+    if(errorCode!=0){
+        cout<<errorCode;
+        return 0;
+    }
+    int index =1;
+ do
+    {
+        switch(fReadStr(fileName,str,index))
+        {
+            case 0:
+            if(findRegex(str,regEx))cout<<str;
+            index++;
+            break;
+            case 1:
+                cout<<-2;
+                return 0;
+            case 2:return 0;
+        }
+       // cout<<str<<endl;
+
+    }while(true);
 
 return 0;
 
