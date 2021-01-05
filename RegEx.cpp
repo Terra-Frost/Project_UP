@@ -19,12 +19,15 @@ int normalize(string& reg)
                     i++;
 
         }
-        else if(errorSymbols.find(reg[i],1)!=string::npos)
-        {
-
-            if(++numberOfSpeshalChar>=2)return -4;
-            if(reg.find(reg[i+1],3)==string::npos)return -5;
+        else{
+            int specialSymbol = errorSymbols.find(reg[i],1);
+            if(specialSymbol!=-1)
+            {
+                if(specialSymbol>2 && ++numberOfSpeshalChar>=2) return -4;
+                if(errorSymbols.find(reg[i+1],3)!=string::npos)return -5;
+            }
         }
+
         if(reg[i]=='^' && i!=0)return -6;
 
     }
@@ -80,7 +83,7 @@ bool findRegex(string str,string reg)
         if(isContaint(str,reg,i))return 1;
        // cout<<endl;
     }
-    //cout<<endl;
+   // cout<<endl;
     return 0;
 }
 int fReadStr(string filename, string& str, size_t line)
