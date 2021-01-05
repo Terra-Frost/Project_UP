@@ -12,12 +12,9 @@ int normalize(string& reg)
     if(errorSymbols.find(reg[0],3)!=string::npos)return -2;
     for(int i=0;i<reg.size();i++)
     {
-        cout<< i<<" " <<reg<<endl;
-
-
-
         if(reg[i]=='\\'){
-                if(errorSymbols.find(reg[i+1]))return -3;
+
+                if(errorSymbols.find(reg[i+1])==string::npos)return -3;
                     swap(reg[i],reg[i+1]);
                     i++;
 
@@ -26,7 +23,7 @@ int normalize(string& reg)
         {
 
             if(++numberOfSpeshalChar>=2)return -4;
-            if(reg.find(reg[i+1],3)!=string::npos)return -5;
+            if(reg.find(reg[i+1],3)==string::npos)return -5;
         }
         if(reg[i]=='^' && i!=0)return -6;
 
@@ -35,25 +32,29 @@ int normalize(string& reg)
 }
 bool isContaint(string str, string reGex,int indexStr)
 {
-        for(int indexRegex = reGex.size();indexRegex>=0;indexRegex--)
+        for(int indexRegex = reGex.size()-1;indexRegex>=0;indexRegex--)
         {
-            if(indexStr<0 && indexRegex>0)return 0;
+           // cout<<indexRegex<<endl;
+           //cout<<str[indexStr]<<"->"<<(int)str[indexStr]<<" "<<reGex[indexRegex]<<"->"<<(int)reGex[indexRegex]<<" "<<reGex[indexRegex-1]<<"->"<<(int)reGex[indexRegex-1]<<endl;
+            if(indexStr<0)return 0;
             switch(reGex[indexRegex])
             {
                 case '^':
-                    if(str[indexStr]==reGex[indexRegex])return 1;
+                    if(str[indexStr]=='\n')return 1;
                     else return 0;
-
+                    break;
                 case '?':
                     if(str[indexStr]==reGex[--indexRegex])indexStr--;
-                    indexRegex--;
-                case '.':    break;
+                    break;
+                case '.':
+                    indexStr--;
+                    break;
                 case '+':
-                    if(str[indexStr]==reGex[--indexRegex])indexStr--;
+                    if(str[indexStr]==reGex[indexRegex-1])indexStr--;
                      else return 0;
                 case '*':
-                    while(str[indexStr]==reGex[--indexRegex] && indexStr>=0)indexStr--;
                     indexRegex--;
+                    while(str[indexStr]==reGex[indexRegex] && indexStr>=0)indexStr--;
                     break;
                 case '\\':indexRegex--;
                 default :
@@ -63,16 +64,23 @@ bool isContaint(string str, string reGex,int indexStr)
             }
 
         }
+        //cout<<"q";
         return 1;
 
 }
 bool findRegex(string str,string reg)
 {
+   // cout<<str<<endl;
     str='\n'+str;
-    for(int i=str.size();i>=0;i--)
+
+    for(int i=str.size()-1;i>=0;i--)
     {
+        //cout<<i<<endl;
+
         if(isContaint(str,reg,i))return 1;
+       // cout<<endl;
     }
+    //cout<<endl;
     return 0;
 }
 int fReadStr(string filename, string& str, size_t line)
@@ -91,17 +99,16 @@ int main()
 {
     string regEx;
     string fileName;
-    //string str;
+    string str;
     getline(cin,regEx);
-    //getline(cin,fileName);
+    getline(cin,fileName);
 
     int errorCode = normalize(regEx);
-    cout<<regEx;
     if(errorCode!=0){
         cout<<errorCode;
         return 0;
     }
-    /*int index =1;
+    int index =1;
  do
     {
         switch(fReadStr(fileName,str,index))
@@ -119,7 +126,7 @@ int main()
        // cout<<str<<endl;
 
     }while(true);
-*/
+
 return 0;
 
 }
