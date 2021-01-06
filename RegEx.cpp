@@ -2,7 +2,7 @@
 #include  <cstdlib>
 #include  <fstream>
 using  namespace  std;
-//Finding if a regex is corec,retuning aporiet arror message if it's not, and making changes for esyer work of the program
+//Finding if a regex is corect,retuning appropriate errorcode if it's not
 int normalize(string& reg)
 {
     const string errorSymbols = "\\^.*+?";
@@ -13,7 +13,7 @@ int normalize(string& reg)
     if(errorSymbols.find(reg[0],3) != string::npos)return -2;
     for(int i = 0; i < reg.size() ; i++)
     {
-
+        // swaping the '\' and the escaped char so that there is easier to work with
         if(reg[i] == '\\'){
 
                 if(errorSymbols.find(reg[i+1]) == string::npos) return -3;
@@ -35,13 +35,11 @@ int normalize(string& reg)
     }
     return 0;
 }
+// Checks if the regex matches a string from a index back
 bool isContaint(string str, string reGex,int indexStr)
 {
         for(int indexRegex = reGex.size()-1 ; indexRegex >= 0; indexRegex--)
         {
-           // cout<<indexRegex<<endl;
-           //cout<<str[indexStr]<<"->"<<(int)str[indexStr]<<" "<<reGex[indexRegex]<<"->"<<(int)reGex[indexRegex]<<" "<<reGex[indexRegex-1]<<"->"<<(int)reGex[indexRegex-1]<<endl;
-            if(indexStr < 0) return 0;
             switch(reGex[indexRegex])
             {
                 case '^':
@@ -76,6 +74,7 @@ bool isContaint(string str, string reGex,int indexStr)
         return 1;
 
 }
+
 bool findRegex(string str,string reg)
 {
    // cout<<str<<endl;
