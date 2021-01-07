@@ -37,7 +37,7 @@ int normalize(string& reg)
     return 0;
 }
 // Checks if the regex matches a string from a index back
-bool isContaint(string str, string reGex,int indexStr)
+bool isContaint(const string &str,const string &reGex,int indexStr)
 {
     for(int indexRegex = reGex.size()-1 ; indexRegex >= 0; indexRegex--)
     {
@@ -91,7 +91,7 @@ string errorCodeParser(int error)
     }
     return "Unexpected behavior";
 }
-bool findRegex(string str,string reg)
+bool findRegex(string& str,const string &reg)
 {
     str='\n'+str; // adding a symbol so it is easier to find where the beginning is
 
@@ -102,7 +102,7 @@ bool findRegex(string str,string reg)
 
     return 0;
 }
-int fReadStr(string filename, string& str, size_t line)
+int fReadStr(const string& filename, string& str, size_t line)
 {
     //cout<<" -------"<<endl;
     ifstream MyFile(filename);
