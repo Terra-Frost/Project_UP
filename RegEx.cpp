@@ -2,6 +2,14 @@
 #include  <cstdlib>
 #include  <fstream>
 using  namespace  std;
+int myFind(const string& str,char c, int index=0)
+{
+    for(;index<str.size();index++)
+    {
+        if(str[index]==c) return index;
+    }
+    return -1;
+}
 //Finding if a regex is corect,retuning appropriate errorcode if it's not
 int normalize(string& reg)
 {
@@ -9,29 +17,32 @@ int normalize(string& reg)
     int numberOfSpeshalChar = 0;
 
     if(reg[reg.size()-1]=='\\') return -1;
+    if(myFind(errorSymbols,reg[0],3) != -1)return -2;
 
-    if(errorSymbols.find(reg[0],3) != string::npos)return -2;
+
+
     for(int i = 0; i < reg.size() ; i++)
     {
+        if(reg[i] == '^' && i != 0) return -4;
         // swaping the '\' and the escaped char so that there is easier to work with
         if(reg[i] == '\\')
         {
 
-            if(errorSymbols.find(reg[i+1]) == string::npos) return -1;
+            if(myFind(errorSymbols,reg[0]) != -1) return -1;
             swap(reg[i],reg[i+1]);
             i++;
         }
         else
         {
-            int specialSymbol = errorSymbols.find(reg[i],1);
+            int specialSymbol =  myFind(errorSymbols,reg[i],2);
             if(specialSymbol != -1)
             {
                 if(specialSymbol > 2 && ++numberOfSpeshalChar >= 2) return -3;
-                if(errorSymbols.find(reg[i+1],3) != string::npos) return -2;
+                if(myFind(errorSymbols,reg[i+1],3) != -1) return -2;
             }
         }
 
-        if(reg[i] == '^' && i != 0) return -4;
+
 
     }
     return 0;
