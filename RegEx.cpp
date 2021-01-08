@@ -91,7 +91,7 @@ string errorCodeParser(int error)
     }
     return "Unexpected behavior";
 }
-bool findRegex(string& str,const string &reg)
+bool findRegex(string str,const string &reg)
 {
     str='\n'+str; // adding a symbol so it is easier to find where the beginning is
 
